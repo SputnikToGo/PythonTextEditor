@@ -1,5 +1,6 @@
 __author__ = 'miika'
 import tkinter as tk
+import fileSystem
 from tkinter import Menu
 import tkinter.scrolledtext as tkst
 
@@ -20,9 +21,11 @@ editArea = tkst.ScrolledText(
 # have to calculate it manually!
 editArea.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 # Adding some text, to see if scroll is working as we expect it
-editArea.insert(tk.INSERT,
-"""\
-""")
+uusFilu = fileSystem.File("huutista.json")
+uusFilu.stage()
+uusFilu.save("eebensasdasd")
+uusFilu.file.read()
+editArea.insert(tk.INSERT,"""/""")
 
 
 win.mainloop()
