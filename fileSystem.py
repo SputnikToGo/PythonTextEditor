@@ -1,6 +1,7 @@
 __author__ = 'Jani Anttonen'
 import json
 import hashlib
+import tempfile
 
 # File system
 # Works with json files as of now
@@ -12,16 +13,26 @@ class File:
     def __init__(self, path):
         self.original = path
         self.file = open(path, 'r')
-        self.path = hashlib.md5(open(path,'rb').read()).hexdigest() + ".json"
+        self.path = hashlib.md5(path) + ".json"
         self.tags = None
 
     # Stages the file for editing and reading
     def stage(self):
-        self.tags = open(self.path,'a+')
+        self.tags = json.loads(open(self.path,'a+'))
 
     # Saves the file with specified content. Overwrites the old content wholly.
     def save(self,slug):
-        self.tags.write(slug)
+        # build the file content
+        t3hslug = {
+            'original': self.original,
+            'tags': [ slug ]
+        }
+        # Convert the content to json
+        parsedslug = json.dump(t3hslug)
+        # Write to the file
+        self.tags.write(parsedslug)
 
     def tag(self,description,index = []):
-        taggable = self.file[index[0]:index[1]]
+        parsedjson = {json.load(self.tags)}
+        parsedjson[index] = description
+        self.save(parsedjson)
