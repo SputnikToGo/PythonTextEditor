@@ -14,11 +14,7 @@ class File:
         self.original = path
         self.file = open(path, 'r')
         self.path = hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
-        self.tags = None
-
-    # Stages the tags file for editing and reading
-    def stage(self):
-        self.tags = json.load(open(self.path,'a+', encoding=('utf-8')))
+        self.tags = open(self.path,'a+')
 
     # Saves the file with specified content. Overwrites the old content wholly.
     def save(self,slug):
