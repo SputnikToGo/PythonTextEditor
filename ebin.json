@@ -1,1 +1,1 @@
-Juuh elikkäs juu
+[{"pk": 1, "model": "contenttypes.contenttype", "fields": {"model": "permission", "name": "permission", "app_label": "auth"}}]

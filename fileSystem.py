@@ -13,12 +13,12 @@ class File:
     def __init__(self, path):
         self.original = path
         self.file = open(path, 'r')
-        self.path = hashlib.md5(path) + ".json"
+        self.path = hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
         self.tags = None
 
-    # Stages the file for editing and reading
+    # Stages the tags file for editing and reading
     def stage(self):
-        self.tags = json.loads(open(self.path,'a+'))
+        self.tags = json.load(open(self.path,'a+', encoding=('utf-8')))
 
     # Saves the file with specified content. Overwrites the old content wholly.
     def save(self,slug):
@@ -28,7 +28,7 @@ class File:
             'tags': [ slug ]
         }
         # Convert the content to json
-        parsedslug = json.dump(t3hslug)
+        parsedslug = json.dumps(t3hslug)
         # Write to the file
         self.tags.write(parsedslug)
 
