@@ -12,23 +12,26 @@ class File:
     """
     def __init__(self, path):
         self.original = path
-        self.file = open(path, 'r')
+        self.file = open(path, 'r', encoding=('utf-8'))
         self.path = hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
-        self.tags = open(self.path,'a+')
+        self.tags = open(self.path,'a+', encoding=('utf-8'))
 
     # Saves the file with specified content. Overwrites the old content wholly.
     def save(self,slug):
         # build the file content
-        t3hslug = {
+        content = {
             'original': self.original,
-            'tags': [ slug ]
+            'tags': { slug }
         }
-        # Convert the content to json
-        parsedslug = json.dumps(t3hslug, sort_keys=True)
         # Write to the file
-        self.tags.write(parsedslug)
+        json.dump(content, self.tags, indent=2)
 
     def tag(self,description,index = []):
-        parsedjson = {json.load(self.tags)}
-        parsedjson[index] = description
-        self.save(parsedjson)
+        with open(self.path) as json_file:
+            parsedjson = json.load(json_file)
+
+        # Form the tag
+        tag = {'index': index, 'description': description}
+
+        # Write to the file
+        json.dump(tag, parsedjson["tags"], indent=2)

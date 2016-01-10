@@ -44,6 +44,12 @@ filemenu.add_separator()
 filemenu.add_command(label="Poistu", command = exitCommand)
 #Lopetetaan valikkorivin luominen
 
+def findSelIndeces():
+    chars = textPad.get(tk.SEL_FIRST, tk.SEL_LAST)
+
+textPad.bind("<ButtonRelease-1>", findSelIndeces())
+
+
 textPad.pack()
 root.mainloop()
 
