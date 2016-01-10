@@ -24,7 +24,7 @@ class File:
             'tags': [ slug ]
         }
         # Convert the content to json
-        parsedslug = json.dumps(t3hslug, sort_keys=True)
+        parsedslug = json.dumps(t3hslug)
         # Write to the file
         self.tags.write(parsedslug)
 
