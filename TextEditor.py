@@ -26,7 +26,6 @@ def saveCommand():
         file.write(data)
         file.close()
 
-
 def exitCommand():
     if tk.messagebox.askokcancel("Poistu", "Haluatko todella poistua?"):
         root.destroy()
@@ -39,7 +38,9 @@ def popupWindow(event):
         popup.grab_release()
 
 
-# Luodaan valikkorivi nimeltä Menu
+
+
+#Luodaan valikkorivi nimeltä Menu
 menu = Menu(root)
 root.config(menu=menu)
 filemenu =  Menu(menu)
@@ -48,15 +49,15 @@ filemenu.add_command(label="Avaa..", command=openCommand)
 filemenu.add_command(label="Tallenna", command=saveCommand)
 filemenu.add_separator()
 filemenu.add_command(label="Poistu", command = exitCommand)
+root.protocol('WM_DELETE_WINDOW', exitCommand)
 
 #Luodaan ponnahdusikkuna
 popup = Menu(root, tearoff=0)
 popup.add_command(label="Lisää tägit")
+popup.add_command(label="Muokkaa tägiä")
+popup.add_separator()
+popup.add_command(label="Poista tägi")
 textPad.bind("<Button-2>", popupWindow)
 
 textPad.pack()
 root.mainloop()
-
-
-
-
