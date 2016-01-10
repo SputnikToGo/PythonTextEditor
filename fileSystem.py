@@ -23,6 +23,7 @@ class File:
             'original': self.original,
             'tags': { slug }
         }
+
         # Write to the file
         json.dump(content, self.tags, indent=2)
 
