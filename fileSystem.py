@@ -32,7 +32,7 @@ class File:
 
         # Form the tag
         tag = {'index': index, 'description': description}
-        parsedjson[0]["tags"]
+        #parsedjson[0]["tags"]
 
         # Write to the file
         json.dump(tag, parsedjson["tags"], indent=2)

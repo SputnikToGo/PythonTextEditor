@@ -34,6 +34,8 @@ def exitCommand():
 def popupWindow(event):
     try:
         popup.tk_popup(event.x_root, event.y_root, 0)
+        print(textPad.index("sel.first"))
+        print(textPad.index("sel.last"))
     finally:
         popup.grab_release()
 
@@ -58,6 +60,7 @@ popup.add_command(label="Muokkaa tägiä")
 popup.add_separator()
 popup.add_command(label="Poista tägi")
 textPad.bind("<Button-2>", popupWindow)
+
 
 textPad.pack()
 root.mainloop()
