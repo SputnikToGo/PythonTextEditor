@@ -21,18 +21,18 @@ class File:
         # build the file content
         content = {
             'original': self.original,
-            'tags': { slug }
+            'tags': [ slug ]
         }
 
         # Write to the file
         json.dump(content, self.tags, indent=2)
 
     def tag(self,description,index = []):
-        with open(self.path) as json_file:
-            parsedjson = json.load(json_file)
+        parsedjson = json.load(self.tags)
 
         # Form the tag
         tag = {'index': index, 'description': description}
+        parsedjson[0]["tags"]
 
         # Write to the file
         json.dump(tag, parsedjson["tags"], indent=2)
