@@ -1,8 +1,8 @@
+import os
+
 __author__ = 'Jani Anttonen'
 import json
 import hashlib
-from io import StringIO
-import tempfile
 
 # File system
 # Works with json files as of now
@@ -12,27 +12,32 @@ class File:
         Works with both new and old files (creates a new one if nonexistent)
     """
     def __init__(self, path):
+
+        # Original file (flat text)
         self.original = path
         self.file = open(path, 'r', encoding=('utf-8'))
+
+        # Initialize tag file (JSON)
         self.path = "data/" + hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
-        self.tags = open(self.path,'a+', encoding=('utf-8'))
+        if not os.path.isfile(self.path):
+            # Write to the file
+            with open(self.path, 'w') as f:
+                json.dump([], f, ensure_ascii=False, indent=2)
 
+        # Open tag file
+        self.tags = open(self.path,'r', encoding=('utf-8'))
 
-    # Saves the file with specified content. Overwrites the old content wholly.
-    def save(self,slug):
-        # build the file content
-        content = {
-            'original': self.original,
-            'tags': [ slug ]
-        }
-
-        # Write to the file
-        with self.tags as f:
-            json.dump(StringIO(content), f, ensure_ascii=False, indent=2)
-
-    def tag(self,description,index = []):
+    def tag(self,description,index):
         # Form the tag
-        tag = {'index': index, 'description': description}
+        tag = {'index':index,'tag':description}
 
+        # Load existing tags
+        with open(self.path) as tagsjson:
+            filecontent = json.load(tagsjson)
+
+        # Add the new tag to the end of tags
+        filecontent.append(tag)
+
+        # Save to file
         with open(self.path, 'w') as f:
-            json.dump(tag, f, ensure_ascii=False, indent=2)
+            json.dump(filecontent, f, ensure_ascii=False, indent=2, sort_keys=True)
