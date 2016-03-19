@@ -15,7 +15,7 @@ textPad = tkst.ScrolledText(root, width=100, height=25)
 def openCommand():
     file = tk.filedialog.askopenfile(parent=root,mode='rb', title='Valitse tiedosto')
     if file !=None:
-        contents = file.read()
+        contents = file.read
         textPad.insert('1.0',contents)
         file.close()
 

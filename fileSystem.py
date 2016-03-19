@@ -7,14 +7,15 @@ import hashlib
 # File system
 class File:
 
-    """ Specifies the file to be worked with
-        Works with both new and old files (creates a new one if nonexistent)
+    """
+    Specifies the file to be worked with
+    Works with both new and old files (creates a new one if nonexistent)
     """
     def __init__(self, path):
 
         # Original file (flat text)
         self.original = path
-        self.file = open(path, 'r', encoding=('utf-8'))
+        #self.open = open(self.original, 'a+', encoding=('utf-8'))
 
         # Initialize tag file (JSON)
         self.path = "data/" + hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
@@ -23,12 +24,10 @@ class File:
             with open(self.path, 'w') as f:
                 json.dump([], f, ensure_ascii=False, indent=2)
 
-        # Open tag file
-        self.tags = open(self.path,'r', encoding=('utf-8'))
-
-    """ Tagging functionality.
-        Gets the tag and its indeces,
-        and then appends them to the tag file.
+    """
+    Tagging functionality.
+    Gets the tag and its indeces,
+    and then appends them to the tag file.
     """
     def tag(self,description,index):
         # Form the tag
@@ -44,3 +43,16 @@ class File:
         # Save to file
         with open(self.path, 'w') as f:
             json.dump(filecontent, f, ensure_ascii=False, indent=2, sort_keys=True)
+
+
+    """
+    GET + SET
+    """
+    # GETTER
+    def read(self):
+        with open(self.original) as f:
+            return f.read()
+    # SETTER
+    def write(self,content):
+        with open(self.original, 'a+', encoding=('utf-8')) as f:
+            f.write(content)

@@ -5,26 +5,51 @@ import tkinter.scrolledtext as tkst
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfile
+from fileSystem import File
 
-#Tässä kohtaa luodaan tekstieditori
+# Initialize the text editor
 root = tk.Tk(className= 'Tekstieditori')
 textPad = tkst.ScrolledText(root, width=150, height=50)
 
-#Aloitetaan komentojen tekeminen
 
+# File open dialog
 def openCommand():
-    file = tk.filedialog.askopenfile(parent=root,mode=' rb', title='Valitse tiedosto')
-    if file !=None:
-        contents = file.read()
-        textPad.insert('1.0',contents)
-        file.close()
 
+    # Ask the user for a file to open
+    userinput = tk.filedialog.askopenfilename(parent=root, title='Valitse tiedosto')
+
+    # Wait for user input
+    if userinput is not None:
+
+        # Use the fileSystem class for all file operations
+        file = File(userinput)
+        contents = file.read()
+
+        # Empty the editor
+        textPad.delete('1.0',tk.END+'-1c')
+
+        # Insert the contents to the editor
+        textPad.insert('1.0',contents)
+
+
+# Saving the original file (not the tags)
 def saveCommand():
-    file = tk.filedialog.asksaveasfile(mode='w')
-    if file != None:
+
+    # Open the file dialog
+    userinput = tk.filedialog.asksaveasfilename()
+
+    # Wait for user input
+    if userinput is not None:
+
+        # Open a file object
+        file = File(userinput)
+
+        # Get text editor contents
         data = textPad.get('1.0', tk.END+'-1c')
+
+        # Write data to file
         file.write(data)
-        file.close()
+
 
 def exitCommand():
     if tk.messagebox.askokcancel("Poistu", "Haluatko todella poistua?"):
