@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0d41188d-a093-46bb-835e-5618adf7805b" name="Default" comment="comment code">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TextEditor.py" afterPath="$PROJECT_DIR$/TextEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fileSystem.py" afterPath="$PROJECT_DIR$/fileSystem.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hello.py" afterPath="$PROJECT_DIR$/hello.py" />
+    <list default="true" id="0d41188d-a093-46bb-835e-5618adf7805b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="python_harkkatyö.iws" />
@@ -474,7 +471,13 @@
       <option name="project" value="LOCAL" />
       <updated>1458400663221</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="import filesystem in texteditor">
+      <created>1458408337149</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1458408337149</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -521,7 +524,8 @@
     <MESSAGE value="fix tagging (now actually works somewhat), add a data folder" />
     <MESSAGE value="add tag appending" />
     <MESSAGE value="comment code" />
-    <option name="LAST_COMMIT_MESSAGE" value="comment code" />
+    <MESSAGE value="import filesystem in texteditor" />
+    <option name="LAST_COMMIT_MESSAGE" value="import filesystem in texteditor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
