@@ -5,7 +5,6 @@ import json
 import hashlib
 
 # File system
-# Works with json files as of now
 class File:
 
     """ Specifies the file to be worked with
@@ -27,6 +26,10 @@ class File:
         # Open tag file
         self.tags = open(self.path,'r', encoding=('utf-8'))
 
+    """ Tagging functionality.
+        Gets the tag and its indeces,
+        and then appends them to the tag file.
+    """
     def tag(self,description,index):
         # Form the tag
         tag = {'index':index,'tag':description}
