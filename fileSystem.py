@@ -1,6 +1,7 @@
 __author__ = 'Jani Anttonen'
 import json
 import hashlib
+from io import StringIO
 import tempfile
 
 # File system
@@ -13,8 +14,9 @@ class File:
     def __init__(self, path):
         self.original = path
         self.file = open(path, 'r', encoding=('utf-8'))
-        self.path = hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
+        self.path = "data/" + hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
         self.tags = open(self.path,'a+', encoding=('utf-8'))
+
 
     # Saves the file with specified content. Overwrites the old content wholly.
     def save(self,slug):
@@ -25,14 +27,12 @@ class File:
         }
 
         # Write to the file
-        json.dump(content, self.tags, indent=2)
+        with self.tags as f:
+            json.dump(StringIO(content), f, ensure_ascii=False, indent=2)
 
     def tag(self,description,index = []):
-        parsedjson = json.load(self.tags)
-
         # Form the tag
         tag = {'index': index, 'description': description}
-        #parsedjson[0]["tags"]
 
-        # Write to the file
-        json.dump(tag, parsedjson["tags"], indent=2)
+        with open(self.path, 'w') as f:
+            json.dump(tag, f, ensure_ascii=False, indent=2)
