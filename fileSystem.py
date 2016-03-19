@@ -30,6 +30,12 @@ class File:
     and then appends them to the tag file.
     """
     def tag(self,description,index):
+        """
+        :rtype: object
+        :param description:
+        :param index:
+        """
+
         # Form the tag
         tag = {'index':index,'tag':description}
 
