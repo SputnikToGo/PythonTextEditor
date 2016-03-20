@@ -1,4 +1,10 @@
-__author__ = 'miika'
+# -*- coding: utf-8 -*-
+__author__ = 'Miika Länsi-Seppänen, Jani Anttonen'
+# Add version check for development
+import platform
+print(platform.python_version())
+
+# Imports
 import tkinter as tk
 from tkinter import Menu
 import tkinter.scrolledtext as tkst
@@ -63,8 +69,6 @@ def popupWindow(event):
         print(textPad.index("sel.last"))
     finally:
         popup.grab_release()
-
-
 
 
 #Luodaan valikkorivi nimeltä Menu

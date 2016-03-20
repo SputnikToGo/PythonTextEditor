@@ -1,8 +1,9 @@
-import os
-
+# -*- coding: utf-8 -*-
 __author__ = 'Jani Anttonen'
+import os
 import json
 import hashlib
+
 
 # File system
 class File:
@@ -52,6 +53,7 @@ class File:
     def read(self):
         with open(self.original) as f:
             return f.read()
+
     # SETTER
     def write(self,content):
         with open(self.original, 'a+', encoding=('utf-8')) as f:
