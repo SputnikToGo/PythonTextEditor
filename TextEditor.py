@@ -20,7 +20,8 @@ class Editor:
     def __init__(self):
         # Initialize the text editor
         self.root = tk.Tk(className= 'Tekstieditori')
-        self.textPad = tkst.ScrolledText(self.root, width=150, height=50, highlightthickness=0)
+        self.textPad = tkst.ScrolledText(self.root, width=100, height=36, highlightthickness=0)
+        self.textPad.config(font=('tkDefaultFont',16,'normal'))
         self.file = {}
 
         #Luodaan valikkorivi nimeltä Menu
@@ -29,6 +30,8 @@ class Editor:
 
         #Luodaan ponnahdusikkuna
         self.popup = Menu(self.root, tearoff=0)
+
+        self.sel_index = [0,1]
 
         self.config()
 
@@ -79,9 +82,13 @@ class Editor:
     def popupWindow(self, event):
         try:
             self.popup.tk_popup(event.x_root, event.y_root, 0)
-            self.add_tag("ebin", [self.textPad.SEL_FIRST, self.textPad.SEL_LAST])
+
+            self.get_index()
+            self.add_tag("ebin")
+
             print(self.textPad.index("sel.first"))
             print(self.textPad.index("sel.last"))
+
             self.textPad.selection_clear()
         finally:
             self.popup.grab_release()
@@ -89,10 +96,15 @@ class Editor:
     def populate_tags(self):
         for tag in self.file.readtags():
             self.textPad.tag_add(tag["tag"],tag["index"][0],tag["index"][1])
+            self.textPad.tag_config(tag["tag"], background="yellow")
 
-    def add_tag(self,description,index):
-        self.textPad.tag_add(description,index[0],index[1])
-        self.file.tag(description,index)
+    def add_tag(self,description):
+        self.textPad.tag_add(description,self.sel_index[0],self.sel_index[1])
+        self.textPad.tag_config(description, background="yellow")
+        self.file.tag(description,self.sel_index)
+
+    def get_index(self):
+        self.sel_index = [self.textPad.index("sel.first"),self.textPad.index("sel.last")]
 
     def config(self):
         self.root.config(menu=self.menu)
@@ -107,7 +119,7 @@ class Editor:
         self.popup.add_separator()
         self.popup.add_command(label="Poista tägi")
         self.textPad.bind("<Button-2>", self.popupWindow)
-        self.textPad.pack()
+        self.textPad.pack(padx=10,pady=10)
         self.root.mainloop()
 
         # Remove unnecessary copy and paste on second mouse click
