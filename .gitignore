@@ -3,3 +3,8 @@
 __pycache__
 .idea/*
 *.xml
+dist
+myenv
+build
+setup.py
+*.spec
