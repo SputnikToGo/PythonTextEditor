@@ -13,87 +13,99 @@ from tkinter import messagebox
 from tkinter.filedialog import asksaveasfile
 from fileSystem import File
 
-# Initialize the text editor
-root = tk.Tk(className= 'Tekstieditori')
-textPad = tkst.ScrolledText(root, width=150, height=50)
+def main():
+    editor = Editor();
 
-# File open dialog
-def openCommand():
+class Editor:
+    def __init__(self):
+        # Initialize the text editor
+        self.root = tk.Tk(className= 'Tekstieditori')
+        self.textPad = tkst.ScrolledText(self.root, width=150, height=50)
+        self.file = {}
 
-    # Ask the user for a file to open
-    userinput = tk.filedialog.askopenfilename(parent=root, title='Valitse tiedosto')
+        #Luodaan valikkorivi nimeltä Menu
+        self.menu = Menu(self.root)
+        self.filemenu =  Menu(self.menu)
 
-    # Wait for user input
-    if userinput is not None:
+        #Luodaan ponnahdusikkuna
+        self.popup = Menu(self.root, tearoff=0)
 
-        # Use the fileSystem class for all file operations
-        file = File(userinput)
-        contents = file.read()
+        self.config()
 
-        # Empty the editor
-        textPad.delete('1.0',tk.END+'-1c')
+    # File open dialog
+    def openCommand(self):
 
-        # Insert the contents to the editor
-        textPad.insert('1.0',contents)
+        # Ask the user for a file to open
+        userinput = tk.filedialog.askopenfilename(parent=self.root, title='Valitse tiedosto')
 
+        # Wait for user input
+        if userinput is not None:
 
-# Saving the original file (not the tags)
-def saveCommand():
+            # Use the fileSystem class for all file operations
+            self.file = File(userinput)
+            contents = self.file.read()
 
-    # Open the file dialog
-    userinput = tk.filedialog.asksaveasfilename()
+            # Empty the editor
+            self.textPad.delete('1.0',tk.END+'-1c')
 
-    # Wait for user input
-    if userinput is not None:
-
-        # Open a file object
-        file = File(userinput)
-
-        # Get text editor contents
-        data = textPad.get('1.0', tk.END+'-1c')
-
-        # Write data to file
-        file.write(data)
+            # Insert the contents to the editor
+            self.textPad.insert('1.0',contents)
 
 
-def exitCommand():
-    if tk.messagebox.askokcancel("Poistu", "Haluatko todella poistua?"):
-        root.destroy()
+    # Saving the original file (not the tags)
+    def saveCommand(self):
 
-#Ponnahdusikkunan eventti
-def popupWindow(event):
-    textPad.selection_clear()
-    try:
-        popup.tk_popup(event.x_root, event.y_root, 0)
-        textPad.tag_add("ebin", "sel.first", "sel.last")
-        print(textPad.index("sel.first"))
-        print(textPad.index("sel.last"))
-    finally:
-        popup.grab_release()
+        # Open the file dialog
+        userinput = tk.filedialog.asksaveasfilename()
 
+        # Wait for user input
+        if userinput is not None:
 
-#Luodaan valikkorivi nimeltä Menu
-menu = Menu(root)
-root.config(menu=menu)
-filemenu =  Menu(menu)
-menu.add_cascade(label="Tiedosto", menu=filemenu)
-filemenu.add_command(label="Avaa..", command=openCommand)
-filemenu.add_command(label="Tallenna", command=saveCommand)
-filemenu.add_separator()
-filemenu.add_command(label="Poistu", command = exitCommand)
-root.protocol('WM_DELETE_WINDOW', exitCommand)
+            # Get text editor contents
+            data = textPad.get('1.0', tk.END+'-1c')
 
-#Luodaan ponnahdusikkuna
-popup = Menu(root, tearoff=0)
-popup.add_command(label="Lisää tägit")
-popup.add_command(label="Muokkaa tägiä")
-popup.add_separator()
-popup.add_command(label="Poista tägi")
-textPad.bind("<Button-2>", popupWindow)
+            # Write data to file
+            self.file.write(data)
 
 
-textPad.pack()
-root.mainloop()
+    def exitCommand(self):
+        if tk.messagebox.askokcancel("Poistu", "Haluatko todella poistua?"):
+            self.root.destroy()
 
-# Remove unnecessary copy and paste on second mouse click
-root.bind_class("Text", sequence='<Button-2>', func=self.popupWindow)
+    #Ponnahdusikkunan eventti
+    def popupWindow(self, event):
+        try:
+            self.popup.tk_popup(event.x_root, event.y_root, 0)
+            self.textPad.tag_add("ebin", "sel.first", "sel.last")
+            print(self.textPad.index("sel.first"))
+            print(self.textPad.index("sel.last"))
+            self.textPad.selection_clear()
+        finally:
+            self.popup.grab_release()
+
+    def tagings(description,index):
+        textPad.tag_add(description,index[0],index[1])
+        self.file.tag(description,index)
+
+    def config(self):
+        self.root.config(menu=self.menu)
+        self.menu.add_cascade(label="Tiedosto", menu=self.filemenu)
+        self.filemenu.add_command(label="Avaa..", command=self.openCommand)
+        self.filemenu.add_command(label="Tallenna", command=self.saveCommand)
+        self.filemenu.add_separator()
+        self.filemenu.add_command(label="Poistu", command = self.exitCommand)
+        self.root.protocol('WM_DELETE_WINDOW', self.exitCommand)
+        self.popup.add_command(label="Lisää tägit")
+        self.popup.add_command(label="Muokkaa tägiä")
+        self.popup.add_separator()
+        self.popup.add_command(label="Poista tägi")
+        self.textPad.bind("<Button-2>", self.popupWindow)
+        self.textPad.pack()
+        self.root.mainloop()
+
+        # Remove unnecessary copy and paste on second mouse click
+        self.root.bind_class("Text", sequence='<Button-2>', func=self.popupWindow)
+
+
+if __name__ == '__main__':
+  main()
