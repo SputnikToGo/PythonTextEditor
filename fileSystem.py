@@ -68,4 +68,4 @@ class File:
     # READ TAGS
     def readtags(self):
         with open(self.path) as tagsjson:
-            return tagsjson.read()
+            return json.load(tagsjson)

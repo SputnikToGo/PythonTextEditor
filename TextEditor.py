@@ -20,7 +20,7 @@ class Editor:
     def __init__(self):
         # Initialize the text editor
         self.root = tk.Tk(className= 'Tekstieditori')
-        self.textPad = tkst.ScrolledText(self.root, width=150, height=50)
+        self.textPad = tkst.ScrolledText(self.root, width=150, height=50, highlightthickness=0)
         self.file = {}
 
         #Luodaan valikkorivi nimeltä Menu
@@ -51,6 +51,9 @@ class Editor:
             # Insert the contents to the editor
             self.textPad.insert('1.0',contents)
 
+            # Populate with existing tags
+            self.populate_tags()
+
 
     # Saving the original file (not the tags)
     def saveCommand(self):
@@ -62,7 +65,7 @@ class Editor:
         if userinput is not None:
 
             # Get text editor contents
-            data = textPad.get('1.0', tk.END+'-1c')
+            data = self.textPad.get('1.0', tk.END+'-1c')
 
             # Write data to file
             self.file.write(data)
@@ -76,15 +79,19 @@ class Editor:
     def popupWindow(self, event):
         try:
             self.popup.tk_popup(event.x_root, event.y_root, 0)
-            self.textPad.tag_add("ebin", "sel.first", "sel.last")
+            self.add_tag("ebin", [self.textPad.SEL_FIRST, self.textPad.SEL_LAST])
             print(self.textPad.index("sel.first"))
             print(self.textPad.index("sel.last"))
             self.textPad.selection_clear()
         finally:
             self.popup.grab_release()
 
-    def tagings(description,index):
-        textPad.tag_add(description,index[0],index[1])
+    def populate_tags(self):
+        for tag in self.file.readtags():
+            self.textPad.tag_add(tag["tag"],tag["index"][0],tag["index"][1])
+
+    def add_tag(self,description,index):
+        self.textPad.tag_add(description,index[0],index[1])
         self.file.tag(description,index)
 
     def config(self):
