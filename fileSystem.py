@@ -16,7 +16,9 @@ class File:
 
         # Original file (flat text)
         self.original = path
-        #self.open = open(self.original, 'a+', encoding=('utf-8'))
+
+        # Make data directory, if not present
+        os.makedirs("data/",exist_ok=True)
 
         # Initialize tag file (JSON)
         self.path = "data/" + hashlib.md5(path.encode('utf-8')).hexdigest() + ".json"
