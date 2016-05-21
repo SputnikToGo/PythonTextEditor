@@ -17,7 +17,6 @@ from fileSystem import File
 root = tk.Tk(className= 'Tekstieditori')
 textPad = tkst.ScrolledText(root, width=150, height=50)
 
-
 # File open dialog
 def openCommand():
 
@@ -63,8 +62,10 @@ def exitCommand():
 
 #Ponnahdusikkunan eventti
 def popupWindow(event):
+    textPad.selection_clear()
     try:
         popup.tk_popup(event.x_root, event.y_root, 0)
+        textPad.tag_add("ebin", "sel.first", "sel.last")
         print(textPad.index("sel.first"))
         print(textPad.index("sel.last"))
     finally:
@@ -93,3 +94,6 @@ textPad.bind("<Button-2>", popupWindow)
 
 textPad.pack()
 root.mainloop()
+
+# Remove unnecessary copy and paste on second mouse click
+root.bind_class("Text", sequence='<Button-2>', func=self.popupWindow)
