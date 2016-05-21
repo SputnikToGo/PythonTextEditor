@@ -64,3 +64,8 @@ class File:
     def write(self,content):
         with open(self.original, 'a+', encoding=('utf-8')) as f:
             f.write(content)
+
+    # READ TAGS
+    def readtags(self):
+        with open(self.path) as tagsjson:
+            return tagsjson.read()
