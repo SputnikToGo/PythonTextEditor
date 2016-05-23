@@ -10,6 +10,7 @@ from tkinter import Menu
 import tkinter.scrolledtext as tkst
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import Entry
 from tkinter.filedialog import asksaveasfile
 from fileSystem import File
 
@@ -56,6 +57,13 @@ class Editor:
 
             # Populate with existing tags
             self.populate_tags()
+
+    def createWindow(self):
+        self.window = self.tk.Toplevel(self)
+        self.label = self.tk.Label("Lisää tägit")
+        self.label.pack(side="top", fill="both", padx=25, pady=25)
+        self.e = Entry(padx=25, pady=25)
+        self.e.pack()
 
 
     # Saving the original file (not the tags)
@@ -118,7 +126,7 @@ class Editor:
         self.popup.add_command(label="Muokkaa tägiä")
         self.popup.add_separator()
         self.popup.add_command(label="Poista tägi")
-        self.textPad.bind("<Button-2>", self.popupWindow)
+        self.textPad.bind("<Button-3>", self.createWindow)
         self.textPad.pack(padx=10,pady=10)
         self.root.mainloop()
 
