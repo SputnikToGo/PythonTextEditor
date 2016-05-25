@@ -50,15 +50,11 @@ class File:
         if len(tags)>0:
             for existing_tags in tags:
                 if index == existing_tags['index']:
-                    print("ebin1")
                     for existing_tag in existing_tags['tag']:
-                        print("ebin2")
                         for new_tag in tag.get('tag'):
                             if new_tag==existing_tag:
-                                print("ebin")
                                 return False
                     for new_tag in tag.get('tag'):
-                        print("ebin")
                         existing_tags['tag'].append(new_tag)
         else:
             tags.append(tag)
