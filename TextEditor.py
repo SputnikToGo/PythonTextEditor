@@ -11,6 +11,7 @@ import tkinter.scrolledtext as tkst
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import Entry
+from tkinter import Toplevel
 from tkinter import Button
 from tkinter.filedialog import asksaveasfile
 from fileSystem import File
@@ -59,14 +60,6 @@ class Editor:
             # Populate with existing tags
             self.populate_tags()
 
-    def createWindow(self):
-        self.window = self.tk.Toplevel(self)
-        self.label = self.tk.Label("Lisää tägit")
-        self.label.pack(side="top", fill="both", padx=25, pady=25)
-        self.e = Entry(padx=25, pady=25)
-        self.e.pack()
-        self.b = Button(text="Lisää tägi", command=self.add_tag)
-
 
     # Saving the original file (not the tags)
     def saveCommand(self):
@@ -87,6 +80,16 @@ class Editor:
     def exitCommand(self):
         if tk.messagebox.askokcancel("Poistu", "Haluatko todella poistua?"):
             self.root.destroy()
+
+    def createWindow(self,event):
+        self.t = Toplevel(self.root)
+        self.t.title("Lisää tägi")
+        self.e = Entry(self.t)
+        self.e.pack()
+        self.b = Button(self.t, text="Lisää tägi", command = self.add_tag)
+        self.b.pack()
+
+        self.get_index()
 
     #Ponnahdusikkunan eventti
     def popupWindow(self, event):
