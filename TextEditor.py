@@ -89,6 +89,8 @@ class Editor:
         self.b = Button(self.t, text="Lisää tägi", command = self.add_tag)
         self.b.pack()
 
+        self.get_index()
+
     #Ponnahdusikkunan eventti
     def popupWindow(self, event):
         try:
