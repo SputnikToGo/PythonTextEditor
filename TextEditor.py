@@ -84,27 +84,16 @@ class Editor:
     def createWindow(self,event):
         self.t = Toplevel(self.root)
         self.t.title("Lisää tägi")
+
         self.e = Entry(self.t)
         self.e.pack()
-        self.b = Button(self.t, text="Lisää tägi", command = self.add_tag)
-        self.b.pack()
-
         self.get_index()
 
-    #Ponnahdusikkunan eventti
-    def popupWindow(self, event):
-        try:
-            self.popup.tk_popup(event.x_root, event.y_root, 0)
+        self.b = Button(self.t, text="Lisää tägi", command = self.add_tag(self.e.get()))
+        self.b.pack()
 
-            self.get_index()
-            self.add_tag(self.e.get())
+        self.textPad.selection_clear()
 
-            print(self.textPad.index("sel.first"))
-            print(self.textPad.index("sel.last"))
-
-            self.textPad.selection_clear()
-        finally:
-            self.popup.grab_release()
 
     def populate_tags(self):
         for tag in self.file.readtags():
@@ -136,7 +125,7 @@ class Editor:
         self.root.mainloop()
 
         # Remove unnecessary copy and paste on second mouse click
-        self.root.bind_class("Text", sequence='<Button-2>', func=self.popupWindow)
+        self.root.bind_class("Text", sequence='<Button-3>', func=self.createWindow)
 
 
 if __name__ == '__main__':
