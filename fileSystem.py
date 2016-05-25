@@ -40,18 +40,32 @@ class File:
         """
 
         # Form the tag
-        tag = {'index':index,'tag':description}
+        tag = {'index':index,'tag':[description]}
 
         # Load existing tags
         with open(self.path) as tagsjson:
-            filecontent = json.load(tagsjson)
+            tags = json.load(tagsjson)
 
         # Add the new tag to the end of tags
-        filecontent.append(tag)
+        if len(tags)>0:
+            for existing_tags in tags:
+                if index == existing_tags['index']:
+                    print("ebin1")
+                    for existing_tag in existing_tags['tag']:
+                        print("ebin2")
+                        for new_tag in tag.get('tag'):
+                            if new_tag==existing_tag:
+                                print("ebin")
+                                return False
+                    for new_tag in tag.get('tag'):
+                        print("ebin")
+                        existing_tags['tag'].append(new_tag)
+        else:
+            tags.append(tag)
 
         # Save to file
         with open(self.path, 'w') as f:
-            json.dump(filecontent, f, ensure_ascii=False, indent=2, sort_keys=True)
+            json.dump(tags, f, ensure_ascii=False, indent=2, sort_keys=True)
 
 
     """
@@ -71,3 +85,9 @@ class File:
     def readtags(self):
         with open(self.path) as tagsjson:
             return json.load(tagsjson)
+
+    # READ TAGS BY INDEX
+    def get_tags_by_index(self, index):
+        for tag in self.readtags():
+            if index == tag['index']:
+                return tag['tag']
