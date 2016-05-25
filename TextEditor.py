@@ -11,6 +11,7 @@ import tkinter.scrolledtext as tkst
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import Entry
+from tkinter import Toplevel
 from tkinter import Button
 from tkinter.filedialog import asksaveasfile
 from fileSystem import File
@@ -34,12 +35,8 @@ class Editor:
         self.filemenu =  Menu(self.menu)
         self.file_menu_conf()
 
-        #Luodaan ponnahdusikkuna
-        self.popup = Menu(self.root, tearoff=0)
-
         self.sel_index = [0,1]
 
-        self.popup_window_conf()
         self.event_config()
 
         self.root.mainloop()
@@ -74,13 +71,15 @@ class Editor:
         self.filemenu.add_command(label="Poistu", command = self.exit)
 
     def create_window(self):
-        self.window = self.tk.Toplevel(self)
-        self.label = self.tk.Label("Lisää tägit")
-        self.label.pack(side="top", fill="both", padx=25, pady=25)
-        self.e = Entry(padx=25, pady=25)
-        self.e.pack()
-        self.b = Button(text="Lisää tägi", command=self.add_tag)
+        self.t = Toplevel(self.root)
+        self.t.title("Lisää tägi")
 
+        self.e = Entry(self.t)
+        self.e.pack()
+        self.get_index()
+
+        self.b = Button(self.t, text="Lisää tägi", command = self.add_tag(self.e.get()))
+        self.b.pack()
 
     # Saving the original file (not the tags)
     def save(self):
@@ -102,26 +101,17 @@ class Editor:
         if tk.messagebox.askokcancel("Poistu", "Haluatko todella poistua?"):
             self.root.destroy()
 
-    def popup_window_conf(self):
-        self.popup.add_command(label="Lisää tägit")
-        self.popup.add_command(label="Muokkaa tägiä")
-        self.popup.add_separator()
-        self.popup.add_command(label="Poista tägi")
 
-    #Ponnahdusikkunan eventti
-    def popup_window(self, event):
-        try:
-            self.popup.tk_popup(event.x_root, event.y_root, 0)
-
-            self.get_index()
-            self.add_tag(self.e.get())
-
-            print(self.textpad.index("sel.first"))
-            print(self.textpad.index("sel.last"))
-
-            self.textpad.selection_clear()
-        finally:
-            self.popup.grab_release()
+    #Ponnahdusikkunan eventti, kommentoitu ulos, koska ihan tärkeitä juttuja vielä sisältää (TRY!!! :3)
+    #def popup_window(self, event):
+    #    try:
+    #        self.popup.tk_popup(event.x_root, event.y_root, 0)
+    #        print(self.textpad.index("sel.first"))
+    #        print(self.textpad.index("sel.last"))
+    #
+    #        self.textpad.selection_clear()
+    #    finally:
+    #        self.popup.grab_release()
 
     def populate_tags(self):
         for tag in self.file.readtags():
@@ -134,13 +124,14 @@ class Editor:
         self.file.tag(description,self.sel_index)
 
     def get_index(self):
-        self.sel_index = [self.textpad.index("sel.first"),self.textpad.index("sel.last")]
+        try:
+            self.sel_index = [self.textpad.index("sel.first"),self.textpad.index("sel.last")]
 
     def event_config(self):
         self.textpad.bind("<Button-3>", self.create_window)
         # Remove unnecessary copy and paste on second mouse click
-        self.root.bind_class("Text", sequence='<Button-2>', func=self.popup_window)
-        self.root.bind_class("Text", sequence='<Button-3>', func=self.popup_window)
+        self.root.bind_class("Text", sequence='<Button-2>', func=self.create_window)
+        self.root.bind_class("Text", sequence='<Button-3>', func=self.create_window)
 
 
 if __name__ == '__main__':
