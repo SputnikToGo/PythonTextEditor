@@ -11,6 +11,7 @@ import tkinter.scrolledtext as tkst
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import Entry
+from tkinter import Button
 from tkinter.filedialog import asksaveasfile
 from fileSystem import File
 
@@ -64,6 +65,7 @@ class Editor:
         self.label.pack(side="top", fill="both", padx=25, pady=25)
         self.e = Entry(padx=25, pady=25)
         self.e.pack()
+        self.b = Button(text="Lisää tägi", command=self.add_tag)
 
 
     # Saving the original file (not the tags)
@@ -92,7 +94,7 @@ class Editor:
             self.popup.tk_popup(event.x_root, event.y_root, 0)
 
             self.get_index()
-            self.add_tag("ebin")
+            self.add_tag(self.e.get())
 
             print(self.textPad.index("sel.first"))
             print(self.textPad.index("sel.last"))
