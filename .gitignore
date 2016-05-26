@@ -8,3 +8,5 @@ myenv
 build
 setup.py
 *.spec
+*.txt
+*.pyc
