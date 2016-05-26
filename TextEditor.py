@@ -18,6 +18,7 @@ from fileSystem import File
 
 def main():
     editor = Editor();
+    editor.root.mainloop()
 
 class Editor:
     def __init__(self):
@@ -32,14 +33,12 @@ class Editor:
 
         #Luodaan valikkorivi nimeltä Menu
         self.menu = Menu(self.root)
-        self.filemenu =  Menu(self.menu)
+        self.filemenu = Menu(self.menu)
         self.file_menu_conf()
 
         self.sel_index = [0,1]
 
         self.event_config()
-
-        self.root.mainloop()
 
     # File open dialog
     def open(self):
@@ -47,8 +46,9 @@ class Editor:
         userinput = tk.filedialog.askopenfilename(parent=self.root, title='Valitse tiedosto')
 
         # Wait for user input
-        if userinput is not None:
-
+        if userinput is None or userinput is "":
+            self.open()
+        else:
             # Use the fileSystem class for all file operations
             self.file = File(userinput)
             contents = self.file.read()
@@ -70,16 +70,20 @@ class Editor:
         self.filemenu.add_separator()
         self.filemenu.add_command(label="Poistu", command = self.exit)
 
-    def create_window(self):
+    def create_window(self,event):
         self.t = Toplevel(self.root)
         self.t.title("Lisää tägi")
 
         self.e = Entry(self.t)
         self.e.pack()
-        self.get_index()
 
-        self.b = Button(self.t, text="Lisää tägi", command = self.add_tag(self.e.get()))
-        self.b.pack()
+        try:
+            self.get_index()
+            existing_tags = self.file.get_tags_by_index(self.sel_index)
+            self.e.insert(0, existing_tags)
+        finally:
+            self.b = Button(self.t, text="Lisää tägi", command=self.entry_callback)
+            self.b.pack()
 
     # Saving the original file (not the tags)
     def save(self):
@@ -115,23 +119,32 @@ class Editor:
 
     def populate_tags(self):
         for tag in self.file.readtags():
-            self.textpad.tag_add(tag["tag"],tag["index"][0],tag["index"][1])
-            self.textpad.tag_config(tag["tag"], background="yellow")
+            if len(tag)>0:
+                for contents in tag["tag"]:
+                    self.textpad.tag_add(tag[contents],tag["index"][0],tag["index"][1])
+                    self.textpad.tag_config(tag[contents], background="yellow")
 
-    def add_tag(self,description):
-        self.textpad.tag_add(description,self.sel_index[0],self.sel_index[1])
-        self.textpad.tag_config(description, background="yellow")
-        self.file.tag(description,self.sel_index)
+    def entry_callback(self):
+        self.add_tag(self.e.get())
+
+    def add_tag(self, description):
+        try:
+            self.textpad.tag_add(description,self.sel_index[0],self.sel_index[1])
+            self.textpad.tag_config(description, background="yellow")
+            self.file.tag(description,self.sel_index)
+        except Exception:
+            print("...Whoooops...")
 
     def get_index(self):
         try:
             self.sel_index = [self.textpad.index("sel.first"),self.textpad.index("sel.last")]
+        except tk.TclError:
+            print("You need to select something before getting selection index!")
 
     def event_config(self):
-        self.textpad.bind("<Button-3>", self.create_window)
+        #self.textpad.bind("<Button-2>", self.create_window)
         # Remove unnecessary copy and paste on second mouse click
         self.root.bind_class("Text", sequence='<Button-2>', func=self.create_window)
-        self.root.bind_class("Text", sequence='<Button-3>', func=self.create_window)
 
 
 if __name__ == '__main__':

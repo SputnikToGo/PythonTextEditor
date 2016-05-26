@@ -53,6 +53,7 @@ class File:
                     for existing_tag in existing_tags['tag']:
                         for new_tag in tag.get('tag'):
                             if new_tag==existing_tag:
+                                print("No duplicate tags allowed.")
                                 return False
                     for new_tag in tag.get('tag'):
                         existing_tags['tag'].append(new_tag)
