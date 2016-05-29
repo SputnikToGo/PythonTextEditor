@@ -38,6 +38,8 @@ class Editor:
         self.filemenu = Menu(self.menu)
         self.file_menu_conf()
 
+        self.file = {}
+
         # Initialize the selection index class variable
         self.sel_index = [0,1]
 
@@ -86,30 +88,33 @@ class Editor:
             entry field, which shows existing tags, and can be used
             to add new ones.
         """
-        # Create a new popup window
-        self.t = Toplevel(self.root)
-        self.t.title("Lisää tägi")
+        if hasattr(self.file, 'path'):
+            # Create a new popup window
+            self.t = Toplevel(self.root)
+            self.t.title("Lisää tägi")
 
-        # Tag entry field
-        self.e = Entry(self.t)
-        self.e.pack()
+            # Tag entry field
+            self.e = Entry(self.t)
+            self.e.pack()
 
-        # Get the selection index before inserting its tags in the entry field
-        self.get_index()
+            # Get the selection index before inserting its tags in the entry field
+            self.get_index()
 
-        # Tag submit button
-        self.b = Button(self.t, text="Lisää tägi", command=self.entry_callback)
-        self.b.pack()
+            # Tag submit button
+            self.b = Button(self.t, text="Lisää tägi", command=self.entry_callback)
+            self.b.pack()
 
-        # Get existing tags
-        existing_tags = self.file.get_tags_by_index(self.sel_index)
+            # Get existing tags
+            existing_tags = self.file.get_tags_by_index(self.sel_index)
 
-        # If there are existing tags, show them on opening the entry field
-        if existing_tags and len(existing_tags)>1:
-            self.e.insert(0, existing_tags)
+            # If there are existing tags, show them on opening the entry field
+            if existing_tags and len(existing_tags)>1:
+                self.e.insert(0, existing_tags)
+            else:
+                # Greeting, if no tags are present
+                self.e.insert(0, "No tags yet! Write one :)")
         else:
-            # Greeting, if no tags are present
-            self.e.insert(0, "No tags yet! Write one :)")
+            self.save()
 
 
     def save(self):
@@ -122,9 +127,7 @@ class Editor:
         # Wait for user input
         if userinput is not None:
 
-            # Initialize file if nonexistent
-            if not self.file.path:
-                self.file = File(userinput)
+            self.file = File(userinput)
 
             # Get text editor contents
             data = self.textpad.get('1.0', tk.END+'-1c')
@@ -184,10 +187,6 @@ class Editor:
             # Add the tag(s) graphically to the text
             self.textpad.tag_add(description,self.sel_index[0],self.sel_index[1])
             self.textpad.tag_config(description, background="yellow")
-
-            # Initialize file if nonexistent
-            if not self.file.path:
-                self.save()
 
             # Add the tag(s) to original file's tag file in data/
             self.file.tag(description,self.sel_index)
