@@ -29,8 +29,6 @@ class Editor:
         self.textpad.config(font=('tkDefaultFont',16,'normal'))
         self.textpad.pack(padx=10,pady=10)
 
-        self.file = {}
-
         #Luodaan valikkorivi nimeltä Menu
         self.menu = Menu(self.root)
         self.filemenu = Menu(self.menu)
@@ -77,13 +75,17 @@ class Editor:
         self.e = Entry(self.t)
         self.e.pack()
 
+        self.get_index()
+
+        self.b = Button(self.t, text="Lisää tägi", command=self.entry_callback)
+        self.b.pack()
+
         try:
-            self.get_index()
             existing_tags = self.file.get_tags_by_index(self.sel_index)
             self.e.insert(0, existing_tags)
-        finally:
-            self.b = Button(self.t, text="Lisää tägi", command=self.entry_callback)
-            self.b.pack()
+        except ValueError:
+            self.e.insert(0, "No tags yet! Write one :)")
+
 
     # Saving the original file (not the tags)
     def save(self):
@@ -92,6 +94,9 @@ class Editor:
 
         # Wait for user input
         if userinput is not None:
+
+            # Initialize file
+            self.file = File(userinput)
 
             # Get text editor contents
             data = self.textpad.get('1.0', tk.END+'-1c')
