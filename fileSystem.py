@@ -41,28 +41,39 @@ class File:
 
         # Form the tag
         tag = {'index':index,'tag':[description]}
+        tags = None
 
         # Load existing tags
-        with open(self.path) as tagsjson:
+        with open(self.path, 'r') as tagsjson:
             tags = json.load(tagsjson)
+            append = False
 
-        # Add the new tag to the end of tags
-        if len(tags)>0:
-            for existing_tags in tags:
-                if index == existing_tags['index']:
-                    for existing_tag in existing_tags['tag']:
+            # Add the new tag to the end of tags
+            for i in range(0,len(tags)):
+                # If the index already has tags
+                if index == tags[i]['index']:
+                    print("Existing tags in same index found.")
+                    # Iterate tags in the index
+                    for existing_tag in tags[i]['tag']:
                         for new_tag in tag.get('tag'):
                             if new_tag==existing_tag:
                                 print("No duplicate tags allowed.")
-                                return False
-                    for new_tag in tag.get('tag'):
-                        existing_tags['tag'].append(new_tag)
-        else:
-            tags.append(tag)
+                                return append
+                    # If no match is returned, append the new tag to the index.
+                    print("Same index found, new tag appended")
+                    tags[i]['tag'].append(description)
+                    break
+            append = True
+
+            # If there's no match, append the tag to end of tags
+            if append:
+                print("No existing tags in this index, new tags appended to end of file.")
+                tags.append(tag)
 
         # Save to file
         with open(self.path, 'w') as f:
             json.dump(tags, f, ensure_ascii=False, indent=2, sort_keys=True)
+            print("Tag file saved.")
 
 
     """
