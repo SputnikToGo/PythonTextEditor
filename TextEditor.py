@@ -166,8 +166,10 @@ class Editor:
         for tag in self.file.readtags():
             if len(tag)>0:
                 for contents in tag["tag"]:
-                    self.textpad.tag_add(tag[contents],tag["index"][0],tag["index"][1])
-                    self.textpad.tag_config(tag[contents], background="yellow")
+                    print(contents)
+                    print(tag["index"])
+                    self.textpad.tag_add(contents,tag["index"][0],tag["index"][1])
+                    self.textpad.tag_config(contents, background="yellow")
 
     def entry_callback(self):
         """ Callback event for adding a tag.
