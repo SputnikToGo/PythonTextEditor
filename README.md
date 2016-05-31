@@ -21,6 +21,3 @@ Steps:
 5.  Voila! Now you should have a highlighted area in the text telling you that the substring has a tag attached to it.
 
 Existing tags are automatically loaded to the editor. The editor uses a JSON file in the "data" subdirectory with a name that's a hashed file path of the original file for this functionality.
-
-### TODO
--
