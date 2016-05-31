@@ -46,7 +46,7 @@ class File:
         # Load existing tags
         with open(self.path, 'r') as tagsjson:
             tags = json.load(tagsjson)
-            append = False
+            append = True
 
             # Add the new tag to the end of tags
             for i in range(0,len(tags)):
@@ -58,12 +58,11 @@ class File:
                         for new_tag in tag.get('tag'):
                             if new_tag==existing_tag:
                                 print("No duplicate tags allowed.")
-                                return append
+                                return False
                     # If no match is returned, append the new tag to the index.
                     print("Same index found, new tag appended")
                     tags[i]['tag'].append(description)
-                    break
-            append = True
+                    append = False
 
             # If there's no match, append the tag to end of tags
             if append:
