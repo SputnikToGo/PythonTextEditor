@@ -14,9 +14,6 @@ from fileSystem import File
 
 __author__ = 'Miika Länsi-Seppänen, Jani Anttonen'
 
-# Add version check for development
-print(platform.python_version())
-
 
 def main():
     """ Create the main editor,
@@ -160,18 +157,6 @@ class Editor:
         if tk.messagebox.askokcancel("Poistu", "Haluatko todella poistua?"):
             self.root.destroy()
 
-    # Ponnahdusikkunan eventti, kommentoitu ulos,
-    # koska ihan tärkeitä juttuja vielä sisältää (TRY!!! :3)
-    # def popup_window(self, event):
-    #    try:
-    #        self.popup.tk_popup(event.x_root, event.y_root, 0)
-    #        print(self.textpad.index("sel.first"))
-    #        print(self.textpad.index("sel.last"))
-    #
-    #        self.textpad.selection_clear()
-    #    finally:
-    #        self.popup.grab_release()
-
     def populate_tags(self):
         """ Get existing tags from the tag
             file, and print them with tkinter
@@ -183,12 +168,16 @@ class Editor:
                 for contents in tag["tag"]:
                     print(contents)
                     print(tag["index"])
+
                     self.textpad.tag_add(contents,
                                          tag["index"][0],
                                          tag["index"][1])
+                    # Muted yellow accent for tags
                     self.textpad.tag_config(contents,
                                             background="yellow",
                                             bgstipple="gray50")
+                    # Lower all incoming tags,
+                    # so that selection always shows
                     self.textpad.tag_lower(contents)
 
     def entry_callback(self):
@@ -210,9 +199,12 @@ class Editor:
             self.textpad.tag_add(description,
                                  self.sel_index[0],
                                  self.sel_index[1])
+            # Muted yellow accent for tags
             self.textpad.tag_config(description,
                                     background="yellow",
                                     bgstipple="gray50")
+            # Lower all incoming tags,
+            # so that selection always shows
             self.textpad.tag_lower(description)
 
             # Add the tag(s) to original file's tag file in data/
