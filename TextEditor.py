@@ -61,26 +61,29 @@ class Editor:
 
             TODO(maybe): open when no file is opened
         """
-        # Ask the user for a file to open
-        userinput = tk.filedialog.askopenfilename(parent=self.root,
-                                                  title='Valitse tiedosto')
+        # Redirect user to save when there's data in textarea
+        if len(self.textpad.get("1.0", tk.END+'-1c')) == 0:
+            # Ask the user for a file to open
+            userinput = tk.filedialog.askopenfilename(parent=self.root,
+                                                      title='Valitse tiedosto')
+            # Wait for user input
+            if userinput is None or userinput is "":
+                self.open()
+            else:
+                # Use the fileSystem class for all file operations
+                self.file = File(userinput)
+                contents = self.file.read()
 
-        # Wait for user input
-        if userinput is None or userinput is "":
-            self.open()
+                # Empty the editor
+                self.textpad.delete('1.0', tk.END+'-1c')
+
+                # Insert the contents to the editor
+                self.textpad.insert('1.0', contents)
+
+                # Populate with existing tags
+                self.populate_tags()
         else:
-            # Use the fileSystem class for all file operations
-            self.file = File(userinput)
-            contents = self.file.read()
-
-            # Empty the editor
-            self.textpad.delete('1.0', tk.END+'-1c')
-
-            # Insert the contents to the editor
-            self.textpad.insert('1.0', contents)
-
-            # Populate with existing tags
-            self.populate_tags()
+            self.save()
 
     def file_menu_conf(self):
         """ File menu configuration,
