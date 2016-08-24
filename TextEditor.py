@@ -37,8 +37,7 @@ class Editor:
         # Text area, inner padding and font config added
         self.textpad.config(font=('tkDefaultFont', 16, 'normal'),
                             padx=10,
-                            pady=10,
-                            selectbackground="blue")
+                            pady=10)
 
         # Add text area to parent
         self.textpad.pack()
