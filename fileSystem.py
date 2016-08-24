@@ -97,6 +97,5 @@ class File:
     # READ TAGS BY INDEX
     def get_tags_by_index(self, index):
         for tag in self.readtags():
-            print(index == tag['index'])
             if index == tag['index']:
                 return tag['tag']
