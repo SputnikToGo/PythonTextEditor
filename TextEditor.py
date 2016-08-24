@@ -124,8 +124,8 @@ class Editor:
             existing_tags = self.file.get_tags_by_index(self.sel_index)
 
             # If there are existing tags, show them on opening the entry field
-            if existing_tags and len(existing_tags) > 1:
-                self.e.insert(0, existing_tags)
+            if existing_tags:
+                self.e.insert(0, existing_tags[-1])
             else:
                 # Greeting, if no tags are present
                 self.e.insert(0, "No tags yet! Write one :)")
