@@ -99,3 +99,21 @@ class File:
         for tag in self.readtags():
             if index == tag['index']:
                 return tag['tag']
+
+    # REMOVE TAG
+    def remove_tag(self, description, index):
+        returnable_tags = self.readtags()
+        i = 0
+
+        for tag in returnable_tags:
+            if tag['index'] == index:
+                print("awwyiss")
+                if description in tag['tag']:
+                    if len(tag['tag']) < 2:
+                        returnable_tags.remove(tag)
+                    tag['tag'].remove(description)
+
+        # Save to file
+        with open(self.path, 'w') as f:
+            json.dump(returnable_tags, f, ensure_ascii=False, indent=2, sort_keys=True)
+            print("Tag file saved.")
