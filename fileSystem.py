@@ -103,11 +103,9 @@ class File:
     # REMOVE TAG
     def remove_tag(self, description, index):
         returnable_tags = self.readtags()
-        i = 0
 
         for tag in returnable_tags:
             if tag['index'] == index:
-                print("awwyiss")
                 if description in tag['tag']:
                     if len(tag['tag']) < 2:
                         returnable_tags.remove(tag)

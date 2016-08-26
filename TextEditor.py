@@ -9,6 +9,8 @@ from tkinter import messagebox
 from tkinter import Entry
 from tkinter import Toplevel
 from tkinter import Button
+from tkinter import Label
+from tkinter import LabelFrame
 from tkinter.filedialog import asksaveasfile
 from fileSystem import File
 
@@ -106,29 +108,22 @@ class Editor:
             self.t = Toplevel(self.root)
             self.t.title("Lisää tägi")
 
-            # Tag entry field
-            self.e = Entry(self.t)
-            self.e.pack()
-
             # Get the selection index before
             # inserting its tags in the entry field
             self.get_index()
+
+            # Get existing tags
+            self.get_this_tag_list()
+
+            # Tag entry field
+            self.e = Entry(self.t)
+            self.e.pack()
 
             # Tag submit button
             self.b = Button(self.t,
                             text="Lisää tägi",
                             command=self.entry_callback)
             self.b.pack()
-
-            # Get existing tags
-            existing_tags = self.file.get_tags_by_index(self.sel_index)
-
-            # If there are existing tags, show them on opening the entry field
-            if existing_tags:
-                self.e.insert(0, existing_tags[-1])
-            else:
-                # Greeting, if no tags are present
-                self.e.insert(0, "No tags yet! Write one :)")
         else:
             self.save()
 
@@ -165,6 +160,8 @@ class Editor:
             tag_add as yellow highlighted
             areas in the text.
         """
+        for tag in self.textpad.tag_names():
+            self.textpad.tag_delete(tag)
         for tag in self.file.readtags():
             if len(tag) > 0:
                 for contents in tag["tag"]:
@@ -182,6 +179,25 @@ class Editor:
                     # so that selection always shows
                     self.textpad.tag_lower(contents)
 
+    def get_this_tag_list(self):
+        if hasattr(self, "taglist"):
+            self.taglist.destroy()
+        self.taglist = LabelFrame(self.t)
+        self.taglist.pack()
+        # Get existing tags
+        try:
+            existing_tags = [Button(self.taglist,
+                             text=tag,
+                             background="yellow",
+                             command=lambda: self.delete_existing_tag(tag, self.sel_index))
+                             for tag
+                             in self.file.get_tags_by_index(self.sel_index)]
+            for tag in existing_tags:
+                tag.pack()
+        except TypeError:
+            # Greeting, if no tags are present
+            print("No tags in this index")
+
     def entry_callback(self):
         """ Callback event for adding a tag.
             Called when the tag submit button
@@ -189,6 +205,7 @@ class Editor:
             event can't have any input.
         """
         self.add_tag(self.e.get())
+        self.get_this_tag_list()
 
     def add_tag(self, description):
         """ GUI implementation of tagging.
@@ -214,6 +231,11 @@ class Editor:
         except Exception:
             # When something goes wrong...
             print("...Whoooops...")
+
+    def delete_existing_tag(self, description, index):
+        self.file.remove_tag(description, index)
+        self.get_this_tag_list()
+        self.populate_tags()
 
     def get_index(self):
         """ Get the indeces of selected text.
