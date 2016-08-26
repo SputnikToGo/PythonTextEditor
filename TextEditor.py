@@ -9,7 +9,6 @@ from tkinter import messagebox
 from tkinter import Entry
 from tkinter import Toplevel
 from tkinter import Button
-from tkinter import Label
 from tkinter import LabelFrame
 from tkinter.filedialog import asksaveasfile
 from fileSystem import File
